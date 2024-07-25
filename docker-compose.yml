@@ -20,15 +20,16 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:16
-    env_file:
-      - .development.env
+    image: postgres
     environment:
-      PG_DATA: /var/lib/postgresql/data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: test
+      PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
-      - 5432:5432
+      - 5434:5432
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data/pgdata
     restart: always
 
 volumes:

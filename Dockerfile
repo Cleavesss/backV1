@@ -4,9 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm i -g @nest/cli
-
-RUN npm i
+RUN npm install
 
 COPY . .
 
