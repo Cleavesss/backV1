@@ -51,7 +51,7 @@ export class UserService {
             throw new HttpException('Пользователь не найден', HttpStatus.NOT_FOUND)
         }
         user.banned = true;
-        user.banReason = dto.babReason;
+        user.banReason = dto.banReason;
         await user.save()
         return user
     }

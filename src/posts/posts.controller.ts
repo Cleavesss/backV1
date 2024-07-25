@@ -20,7 +20,7 @@ export class PostsController {
           properties: {
             title: { type: 'string' },
             content: { type: 'string' },
-            userId: { type: 'integer' },
+            userId: { type: 'number' },
             file: {
               type: 'file',
               format: 'jpg',

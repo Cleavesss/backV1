@@ -8,5 +8,5 @@ export class BanUserDto {
 
     @ApiProperty({example: 'Хамство', description: 'Примчина бана'})
     @IsString({message: "Должно быть строкой"})
-    readonly babReason: string;
+    readonly banReason: string; // Миграции нужны, опечатка
 }

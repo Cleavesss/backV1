@@ -12,6 +12,6 @@ export class CreatePostDto {
     readonly content: string;
 
     @ApiProperty({example: '1', description: 'Уникальный идентификатор пользователя'})
-    @IsNumber({}, {message: "Должно быть строкой"})
-    readonly userId: number;
+    @IsString({message: "Должно быть строкой"})
+    readonly userId: string;
 }
