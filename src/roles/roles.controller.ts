@@ -23,4 +23,11 @@ export class RolesController {
     getByValue(@Param('value') value: string){
         return this.roleService.getRoleByValue(value)
     }
+
+    @ApiOperation({summary: 'Посмотреть все роли'})
+    @ApiResponse({status: 200, type: Role})
+    @Get()
+    getAll(){
+        return this.roleService.getAll()
+    }
 }
