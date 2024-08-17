@@ -4,6 +4,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserService } from 'src/users/user.service';
 import * as bcript from 'bcryptjs'
 import { User } from 'src/users/users.model';
+import { access } from 'fs';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,11 @@ export class AuthService {
    
     async login(userDto: CreateUserDto){
         const user = await this.validateUser(userDto);
-        return this.generateToken(user)
+        const {accessToken, refreshToken} = await this.generatePairToken(user)
+        return {
+            accessToken, 
+            refreshToken
+        }
     }
 
    
@@ -24,13 +29,27 @@ export class AuthService {
         }
         const hashPassword = await bcript.hash(userDto.password, 5);
         const user = await this.userService.createUser({...userDto, password: hashPassword})
-        return this.generateToken(user)
+        return user
     }
 
-    private async generateToken(user: User){
-        const payload = {email: user.email, id: user.id, roles: user.roles }
+    async refresh(user: {email: string, id: number, roles: any[]}){
+        const accessToken =  await this.generateAccessToken(user) 
         return {
-            token: this.jwtService.sign(payload)
+            accessToken 
+        } 
+    }
+
+    private async generateAccessToken(payload){
+        return this.jwtService.sign(payload)
+    }
+
+    private async generatePairToken(user: User){
+        const payload = {email: user.email, id: user.id, roles: user.roles }
+        const accessToken = this.jwtService.sign(payload)
+        const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'})
+        return {
+            accessToken,
+            refreshToken
         }
     }
 
