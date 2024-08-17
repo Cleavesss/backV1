@@ -1,10 +1,11 @@
-import { Body, Controller, HttpCode, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiProperty, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { JwtRefreshGuard } from './jwt-refresh.guard';
 import { JwtService } from "@nestjs/jwt";
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 
 class TResponse  {
@@ -51,5 +52,15 @@ export class AuthController {
     logout(@Req() request: Request,  @Res({ passthrough: true }) response: Response){
         response.clearCookie("refreshToken")
         return {detail: "success"}
+    }
+
+    @ApiOperation({summary: "Авторизация (для получения инфы о данном пользаке)"})
+    @ApiResponse({status: 200, description: 'Вовзращаются в том числе массив ролей этого пользователя'})
+    @UseGuards(JwtAuthGuard)
+    @Get('/getUserInfo')
+    @HttpCode(200)
+    getUserInfo(@Req() request: Request){
+        const {email, id, roles} = this.jwtService.verify(request.cookies.refreshToken)
+        return {email, id, roles}
     }
 }
